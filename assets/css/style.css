@@ -1,0 +1,10 @@
+.jumbotron {
+	background: url("../images/cityscape.jpg");
+	background-size: 125% 100%;
+	color: #eee;
+}
+
+.text-right {
+	padding-top: 60px;
+	letter-spacing: 3px;
+}
