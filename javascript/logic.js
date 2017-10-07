@@ -34,33 +34,35 @@ $("#addTrain").on("click", function() {
 
     database.ref().push({
         train: train,
-        departing: departing,
         destination: destination,
         firstTrain: firstTrain,
         frequency: frequency,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 });
+
 var a;
 
-// var randomFormat = "MM/DD/YYYY";
-
-// var convertedDate = moment(startDate, randomFormat);
-
-// var correctDate = moment.unix(startDate).format("MM/DD/YYYY");
-
-// var f = $("<td>").html(correctDate);
-
-// $("#info").append(a)
-
 database.ref().on("child_added", function(childSnapshot) {
+
+    var firstTrainInput = moment(childSnapshot.val().firstTrain, "hh:mm");
+    var frequencyInput = childSnapshot.val().frequency;
+    var differenceTime = moment().diff(moment(firstTrain), "minutes");
+    var minutesAway = frequencyInput - (differenceTime % frequencyInput);
+    var trainTimes = moment().add(minutesAway, "minutes");
+    var nextArrival = moment(trainTimes).format("hh:mm");
+
+    var trainName = childSnapshot.val().train;
+    var destinationName = childSnapshot.val().destination
+
+
     
+
     a = $("<tr>")
-    var b = $("<td>").html(childSnapshot.val().train);
-    var c = $("<td>").html(childSnapshot.val().departing);
-    var d = $("<td>").html(childSnapshot.val().destination);
-    var e = $("<td>").html(childSnapshot.val().firstTrain);
-    var f = $("<td>").html(childSnapshot.val().frequency);
+    var b = $("<td>").html(trainName);
+    var c = $("<td>").html(destinationName);
+    var d = $("<td>").html(frequencyInput);
+    var e = $("<td>").html(minutesAway);
+    var f = $("<td>").html(nextArrival);
     a.append(b);
     a.append(c);
     a.append(d);
@@ -69,6 +71,7 @@ database.ref().on("child_added", function(childSnapshot) {
     $("#info").append(a)
 
 });
+
 // // database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
 // //     $("#nameDisplay").html("Name" + snapshot.val().name);
 // //     $("#roleDisplay").html("Role" + snapshot.val().role);
